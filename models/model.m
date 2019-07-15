@@ -3,7 +3,10 @@ x = xolotl;
 %% Instantiate a single-compartment model
 
 x.add('compartment', 'comp', 'Cm', 10, 'A', 0.029);
-x.comp.add('bucholtz/CalciumMech');
+
+% calcium parameters
+
+x.comp.add('buchholtz/CalciumMech', 'phi', phi, 'tau_Ca', 200, 'Ca_in', 0);
 
 x.comp.add('soplata/thalamocortical/NaV', 'gbar', 900, 'E', 50);
 x.comp.add('soplata/thalamocortical/Kd', 'gbar', 1000, 'E', -100);
