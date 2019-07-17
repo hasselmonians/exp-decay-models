@@ -7,7 +7,7 @@ x.add('compartment', 'comp', 'Cm', 10, 'A', 0.029, 'vol', 2.9e-5);
 % intracellular calcium
 x.comp.add('buchholtz/CalciumMech', 'phi', 1, 'tau_Ca', 5, 'Ca_in', 2.4e-3);
 
-x.comp.add('soplata/thalamocortical/NaV', 'gbar', 900, 'E', 50);
+% x.comp.add('soplata/thalamocortical/NaV', 'gbar', 900, 'E', 50);
 x.comp.add('soplata/thalamocortical/Kd', 'gbar', 1000, 'E', -100);
 x.comp.add('soplata/thalamocortical/HCurrent', 'gbar', 0.25, 'E', -43);
 x.comp.add('soplata/thalamocortical/CaT', 'gbar', 20);
