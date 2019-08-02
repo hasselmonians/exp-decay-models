@@ -7,8 +7,7 @@ p.SimFcn    = @simSpiking;
 param_names = [x.find('*gbar'); {'I_ext'}];
 p.parameter_names = param_names;
 p.lb = zeros(1, length(p.parameter_names));
-p.ub = 500 * ones(1, length(p.parameter_names));
-p.ub(7) = 1;
+p.ub = 2 * [x.get('*gbar'); 1]';
 
 % set procrustes options
 p.options.MaxTime = 900;
