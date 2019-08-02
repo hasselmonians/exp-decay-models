@@ -21,7 +21,7 @@ function [cost, rate, V] = simSpiking(x, ~, ~)
   end
 
   % compute the spiketimes, stopping at a maximum of 600
-  spiketimes = veclib.nonnans(xtools.findNSpikeTimes(V, 600, -30));
+  spiketimes = veclib.nonnans(xtools.findNSpikeTimes(V - mean(V), 600, 10));
 
   % compute the firing rate in Hz
   rate = 1e3 / mean(diff(spiketimes));
