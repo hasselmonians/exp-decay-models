@@ -17,7 +17,7 @@ function [cost, rate, V] = simSpiking(x, ~, ~)
   V = x.integrate;
 
   if any(isnan(V))
-    cost = cost + 400;
+    cost = cost + 1e3;
   end
 
   % compute the spiketimes, stopping at a maximum of 600
@@ -29,9 +29,9 @@ function [cost, rate, V] = simSpiking(x, ~, ~)
 
   % compute the cost
   if isnan(rate) || isempty(rate)
-    cost = cost + 400;
+    cost = cost + 1e3;
   else
-    cost = cost + (rate - 5)^2;
+    cost = cost + (rate - 10)^2;
   end
 
 end % function
