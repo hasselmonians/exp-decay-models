@@ -4,8 +4,8 @@ function [cost, rate, V, costparts] = simSpiking(x, ~, ~)
   % computes the firing rate and chooses a cell with a firing rate around 20 Hz
 
   cost      = 0;
-  costparts = zeros(3, 1);
-  weights   = [1, 1e2, 1e-3];
+  costparts = zeros(5, 1);
+  weights   = [1, 1e2, 1e-3, 1, 1];
 
   % add some injected current
   % x.I_ext = 0.2;
@@ -42,15 +42,33 @@ function [cost, rate, V, costparts] = simSpiking(x, ~, ~)
   if isnan(rate) || isempty(rate)
     costparts(2) = weights(2) * 1e9;
   else
-    costparts(2) = weights(2) * (CV)^2;
+    costparts(2) = weights(2) * sqCost(0, CV);
   end
 
   % penalize the number of spikes about a target value
   if isempty(spiketimes)
     costparts(3) = weights(3) * 1e9;
   else
-    costparts(3) = weights(3) * (length(spiketimes) - target_num_spikes)^2;
+    costparts(3) = weights(3) * sqCost(target_num_spikes, length(spiketimes));
   end
+
+  %% Cost for spike height and spike trough
+
+  % penalize a spike height outside of a nice range
+  target_spike_height = [0, 30];  % mV
+  target_spike_trough = [-80, -60]; % mV
+
+  % compute spike heights
+  spikeheight = V(spiketimes);
+
+  % compute spike troughs
+  spiketrough = V(veclib.nonnans(xtools.findNSpikeTimes(-V + mean(V), 600, 10)));
+
+  % penalize the spike height outside of a given range
+  costparts(4) = weights(4) * sum(xtools.binCost(target_spike_height, spikeheight));
+
+  % penalize the spike trough outside of a given range
+  costparts(5) = weights(5) * sum(xtools.binCost(target_spike_trough, spiketrough));
 
   %% Compute the final cost
 
