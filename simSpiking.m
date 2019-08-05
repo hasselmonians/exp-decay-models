@@ -74,4 +74,8 @@ function [cost, rate, V, costparts] = simSpiking(x, ~, ~)
 
   cost = sum(costparts);
 
+  if isnan(cost)
+    cost = 1e12;
+  end
+
 end % function
