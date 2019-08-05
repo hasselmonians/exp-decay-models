@@ -7,7 +7,7 @@ p.SimFcn    = @simSpiking;
 param_names = [x.find('*gbar'); {'I_ext'}];
 p.parameter_names = param_names;
 p.lb = zeros(1, length(p.parameter_names));
-p.ub = 2 * [x.get('*gbar'); 1]';
+p.ub = 2 * [x.get('*gbar'); 0.5]';
 
 % set procrustes options
 p.options.MaxTime = 900;
@@ -16,7 +16,7 @@ p.options.SwarmSize = 24;
 %% Initialize optimization parameters
 
 % optimization parameters
-nSims       = 100;
+nSims       = 20;
 nEpochs     = 3;
 nParams     = length(p.parameter_names);
 
