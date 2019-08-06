@@ -4,13 +4,20 @@
 %   x: a vector to be ratio'd
 % Outputs:
 %   y: the ratio'd vector, the dimension is one less than x (same as with 'diff')
+%     y is always a column vector (n x 1)
 %
 % Example:
 %   y = ratio(x);
-%   ratio([1, 2, 3]) => [0.5000, 0.6667]
+%   ratio([1, 2, 3]) => [2.0000, 1.5000]'
+%
+% See Also: diff
 
 function y = ratio(x)
 
-  y = x(1:end-1) ./ x(2:end);
+  if isvector(x)
+    x = x(:);
+  end
+    y = x(2:end, :) ./ x(1:end-1, :);
+  end
 
 end
