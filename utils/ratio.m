@@ -18,6 +18,5 @@ function y = ratio(x)
     x = x(:);
   end
     y = x(2:end, :) ./ x(1:end-1, :);
-  end
 
-end
+end % function
