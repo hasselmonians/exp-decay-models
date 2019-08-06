@@ -3,7 +3,7 @@
 % Arguments:
 %   x: a vector to be ratio'd
 % Outputs:
-%   y: the ratio'd vector
+%   y: the ratio'd vector, the dimension is one less than x (same as with 'diff')
 %
 % Example:
 %   y = ratio(x);
