@@ -11,10 +11,13 @@ function [cost, V, costparts] = simDecay(x, ~, ~)
 
   % simulate for real
   x.set('I_ext', 0);
-  V = x.integrate;
+  V2 = x.integrate;
 
   % compute the spike times
-  spiketimes = veclib.nonnans(xtools.findNSpikeTimes(V - mean(V), 600, 10));
+  spiketimes = veclib.nonnans(xtools.findNSpikeTimes(V2 - mean(V2), 600, 10));
+
+  % concatenate the two simulations to get the full trace
+  V = [V; V2];
 
   %% Cost due to exponential decay in firing rate
   % the coefficient of variation (CV) of the ratio of adjacent interspike intervals (ISIs)
