@@ -53,6 +53,8 @@ function [I_ext, ii, metrics] = rheobase(x, min_firing_rate, current_steps, verb
     end
   end % for loop
 
+  corelib.verb(ii == length(current_steps) & verbosity, 'rheobase', ['maximum iterations reached'])
+
   I_ext = current_steps(ii);
 
 end % function
