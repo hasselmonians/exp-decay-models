@@ -1,4 +1,4 @@
-function [cost, V, costparts] = simDecay(x, ~, ~)
+function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
 
   cost = 0;
   costparts = zeros(5, 1);
@@ -49,6 +49,9 @@ function [cost, V, costparts] = simDecay(x, ~, ~)
   rat           = ratio(spiketimes2);
   CV            = std(rat) / mean(rat);
   costparts(2)  = sqCost(0, CV);
+
+  %% Compute the time constant of firing rate change
+  tau_fr        = 1 / log(mean_rat);
 
   %% Compute the total cost
 
