@@ -47,8 +47,9 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
   % should be 0 if the firing rate decays exponentially
   % the mean of the ratio is the base of the exponent
 
-  rat           = ratio(spiketimes2);
-  CV            = std(rat) / mean(rat);
+  rat           = ratio(1e-3 * diff(spiketimes2));
+  mean_rat      = mean(rat);
+  CV            = std(rat) / mean_rat;
   costparts(2)  = sqCost(0, CV);
 
   %% Compute the time constant of firing rate change
