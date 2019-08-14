@@ -4,10 +4,10 @@ p.options.UseParallel = true;
 p.SimFcn    = @simSpiking;
 
 % parameters
-param_names = [x.find('*gbar'); {'I_ext'}];
+param_names = [x.find('*gbar')];
 p.parameter_names = param_names;
 p.lb = zeros(1, length(p.parameter_names));
-p.ub = 2 * [x.get('*gbar'); 0.5]';
+p.ub = 2 * [x.get('*gbar')]';
 
 % set procrustes options
 p.options.MaxTime = 900;
