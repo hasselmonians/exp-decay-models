@@ -5,7 +5,7 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
   weights = [1, 1, 1, 1, 1];
 
   % figure out the rheobase for the model
-  I_ext = rheobase(x, [], [], false, 'sampling_rate', 1/x.dt);
+  I_ext = rheobase(x, 'min_firing_rate', 1, 'verbosity', false);
 
   % simulate with some injected current
   x.reset;
