@@ -13,6 +13,7 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
   x.I_ext = I_ext;
   V = x.integrate;
 
+  % compute the spike times
   spiketimes = veclib.nonnans(xtools.findNSpikeTimes(V - mean(V), 600, 10));
 
   % simulate with twice the current
@@ -41,7 +42,7 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
     costparts(1) = costparts(1) + 1e9;
   end
 
-  %% Cost due to exponential decay in firing rate
+  %% Cost due to variation around exponential decay in firing rate
   % the coefficient of variation (CV) of the ratio of adjacent interspike intervals (ISIs)
   % should be 0 if the firing rate decays exponentially
   % the mean of the ratio is the base of the exponent
