@@ -54,6 +54,7 @@ function [I_ext, ii, metrics] = minSpikingCurrent(x, varargin)
   options.debug = false;
   options.current_steps = 0:0.01:1;
   options.sampling_rate = 1/x.dt;
+  options.ibi_thresh = 300;
   options.verbosity = true;
 
   options = orderfields(options);
@@ -86,7 +87,7 @@ function [I_ext, ii, metrics] = minSpikingCurrent(x, varargin)
     end
   end % for loop
 
-  corelib.verb(ii == length(current_steps) & options.verbosity, 'rheobase', ['maximum iterations reached'])
+  corelib.verb(ii == length(options.current_steps) & options.verbosity, 'rheobase', ['maximum iterations reached'])
 
   I_ext = options.current_steps(ii);
 
