@@ -52,8 +52,11 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
   CV            = std(rat) / mean_rat;
   costparts(2)  = sqCost(0, CV);
 
-  %% Compute the time constant of firing rate change
+  %% Cost due to time constant of firing rate change
+  % the time constant should be within an acceptable range
+
   tau_fr        = 1 / log(mean_rat);
+  costparts(3)  = xtools.binCost([0.5, 10], tau_fr);
 
   %% Compute the total cost
 
