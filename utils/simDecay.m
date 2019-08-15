@@ -60,7 +60,6 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
 
   %% Compute the total cost
 
-  costparts = weights .* costparts;
-  cost      = sum(cost);
+  cost      = sum(weights * costparts);
 
 end % function
