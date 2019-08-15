@@ -1,7 +1,7 @@
 p           = xfit;
 p.x         = x;
 p.options.UseParallel = true;
-p.SimFcn    = @simSpiking;
+p.SimFcn    = @simDecay;
 
 % parameters
 param_names = [x.find('*gbar')];
@@ -16,7 +16,7 @@ p.options.SwarmSize = 24;
 %% Initialize optimization parameters
 
 % optimization parameters
-nSims       = 20;
+nSims       = 500;
 nEpochs     = 3;
 nParams     = length(p.parameter_names);
 
@@ -29,7 +29,7 @@ rate        = NaN(nSims, 1);
 
 
 % try to load existing data file
-filename    = ['data-simSpiking-' corelib.getComputerName '.mat'];
+filename    = ['data-simDecay-' corelib.getComputerName '.mat'];
 if exist(filename)
   load(filename)
   start_idx = find(isnan(cost),1,'first')
