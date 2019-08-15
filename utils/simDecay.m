@@ -4,8 +4,8 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
   costparts = zeros(5, 1);
   weights = [1, 1, 1, 1, 1];
 
-  % figure out the rheobase for the model
-  I_ext = rheobase(x, 'min_firing_rate', 1, 'verbosity', false);
+  % figure out the minSpikingCurrent for the model
+  I_ext = minSpikingCurrent(x, 'min_firing_rate', 1, 'verbosity', false);
 
   % simulate with some injected current
   x.reset;

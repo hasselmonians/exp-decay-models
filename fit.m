@@ -16,7 +16,7 @@ p.options.SwarmSize = 24;
 %% Initialize optimization parameters
 
 % optimization parameters
-nSims       = 500;
+nSims       = 2000;
 nEpochs     = 3;
 nParams     = length(p.parameter_names);
 

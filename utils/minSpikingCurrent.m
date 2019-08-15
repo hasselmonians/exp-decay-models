@@ -45,7 +45,7 @@
 %     xtools.findNSpikeTimes
 %
 
-function [I_ext, ii, metrics] = rheobase(x, varargin)
+function [I_ext, ii, metrics] = minSpikingCurrent(x, varargin)
 
   % options and defaults
   options = struct;
