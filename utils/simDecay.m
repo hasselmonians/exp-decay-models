@@ -11,6 +11,7 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
   x.reset;
   x.closed_loop = true;
   x.I_ext = I_ext;
+  x.integrate;
   V = x.integrate;
 
   % compute the spike times
@@ -42,21 +43,25 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
     costparts(1) = costparts(1) + 1e9;
   end
 
+  %% Cost due to the ratio of the ISIs
+  % TODO: talk to Zoran or Marc about this...
+
+  rat           = ratio(1e-3 * diff(spiketimes2));
+  mean_rat      = mean(rat);
+
   %% Cost due to variation around exponential decay in firing rate
   % the coefficient of variation (CV) of the ratio of adjacent interspike intervals (ISIs)
   % should be 0 if the firing rate decays exponentially
   % the mean of the ratio is the base of the exponent
 
-  rat           = ratio(1e-3 * diff(spiketimes2));
-  mean_rat      = mean(rat);
   CV            = std(rat) / mean_rat;
-  costparts(2)  = sqCost(0, CV);
+  costparts(3)  = sqCost(0, CV);
 
   %% Cost due to time constant of firing rate change
   % the time constant should be within an acceptable range
-
+  keyboard
   tau_fr        = 1 / log(mean_rat);
-  costparts(3)  = xtools.binCost([0.5, 10], tau_fr);
+  costparts(4)  = xtools.binCost([0.5, 10], tau_fr);
 
   %% Compute the total cost
 
