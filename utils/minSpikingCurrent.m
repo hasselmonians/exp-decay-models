@@ -53,6 +53,7 @@ function [I_ext, ii, metrics] = minSpikingCurrent(x, varargin)
   options.spike_threshold = 10;
   options.debug = false;
   options.current_steps = 0:0.01:1;
+  options.sampling_rate = 1/x.dt;
   options.verbosity = true;
 
   options = orderfields(options);
