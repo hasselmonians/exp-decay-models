@@ -46,7 +46,7 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
   %% Cost due to the ratio of the ISIs
   % TODO: talk to Zoran or Marc about this...
 
-  rat           = ratio(1e-3 * diff(spiketimes2));
+  rat           = ratio(1e-3 * diff(spiketimes2)); % ratio of adjacent ISIs in seconds
   mean_rat      = mean(rat);
 
   %% Cost due to variation around exponential decay in firing rate
@@ -59,7 +59,6 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
 
   %% Cost due to time constant of firing rate change
   % the time constant should be within an acceptable range
-  keyboard
   tau_fr        = 1 / log(mean_rat);
   costparts(4)  = xtools.binCost([0.5, 10], tau_fr);
 
