@@ -1,18 +1,20 @@
-function [cost, V, costparts] = simDecay(x, ~, ~)
+function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
 
   cost = 0;
   costparts = zeros(5, 1);
   weights = [1, 1, 1, 1, 1];
 
-  % figure out the rheobase for the model
-  I_ext = rheobase(x, [], [], false, 'sampling_rate', 1/x.dt);
+  % figure out the minSpikingCurrent for the model
+  I_ext = minSpikingCurrent(x, 'min_firing_rate', 1, 'verbosity', false);
 
   % simulate with some injected current
   x.reset;
   x.closed_loop = true;
   x.I_ext = I_ext;
+  x.integrate;
   V = x.integrate;
 
+  % compute the spike times
   spiketimes = veclib.nonnans(xtools.findNSpikeTimes(V - mean(V), 600, 10));
 
   % simulate with twice the current
@@ -41,18 +43,27 @@ function [cost, V, costparts] = simDecay(x, ~, ~)
     costparts(1) = costparts(1) + 1e9;
   end
 
-  %% Cost due to exponential decay in firing rate
+  %% Cost due to the ratio of the ISIs
+  % TODO: talk to Zoran or Marc about this...
+
+  rat           = ratio(1e-3 * diff(spiketimes2)); % ratio of adjacent ISIs in seconds
+  mean_rat      = mean(rat);
+
+  %% Cost due to variation around exponential decay in firing rate
   % the coefficient of variation (CV) of the ratio of adjacent interspike intervals (ISIs)
   % should be 0 if the firing rate decays exponentially
   % the mean of the ratio is the base of the exponent
 
-  rat           = ratio(spiketimes2);
-  CV            = std(rat) / mean(rat);
-  costparts(2)  = sqCost(0, CV);
+  CV            = std(rat) / mean_rat;
+  costparts(3)  = sqCost(0, CV);
+
+  %% Cost due to time constant of firing rate change
+  % the time constant should be within an acceptable range
+  tau_fr        = 1 / log(mean_rat);
+  costparts(4)  = xtools.binCost([0.5, 10], tau_fr);
 
   %% Compute the total cost
 
-  costparts = weights .* costparts;
-  cost      = sum(cost);
+  cost      = sum(weights * costparts);
 
 end % function

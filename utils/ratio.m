@@ -14,7 +14,7 @@
 
 function y = ratio(x)
 
-  if isvector(x)
+  if ~isvector(x)
     x = x(:);
   end
     y = x(2:end, :) ./ x(1:end-1, :);
