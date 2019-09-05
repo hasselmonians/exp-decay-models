@@ -1,12 +1,12 @@
-% ### minSpikingCurrent
+% ### maxSpikingCurrent
 %
 %
 % **Syntax**
 %
 % ```matlab
-% [I_ext, index, metrics] = minSpikingCurrent(x)
-% [I_ext, index, metrics] = minSpikingCurrent(x, 'PropertyName', PropertyValue, ...)
-% [I_ext, index, metrics] = minSpikingCurrent(x, options)
+% [I_ext, index, metrics] = maxSpikingCurrent(x)
+% [I_ext, index, metrics] = maxSpikingCurrent(x, 'PropertyName', PropertyValue, ...)
+% [I_ext, index, metrics] = maxSpikingCurrent(x, options)
 % ```
 %
 % **Description**
@@ -45,7 +45,7 @@
 %     xtools.findNSpikeTimes
 %
 
-function [I_ext, ii, metrics] = minSpikingCurrent(x, varargin)
+function [I_ext, ii, metrics] = maxSpikingCurrent(x, varargin)
 
   % options and defaults
   options = struct;
@@ -68,13 +68,13 @@ function [I_ext, ii, metrics] = minSpikingCurrent(x, varargin)
   options = corelib.parseNameValueArguments(options, varargin{:});
 
   % save the initial state
-  corelib.verb(options.verbosity && any(strcmp({x.snapshots.name}, 'minSpikingCurrent')), 'minSpikingCurrent', 'overwriting ''minSpikingCurrent'' snapshot');
-  x.snapshot('minSpikingCurrent');
+  corelib.verb(options.verbosity && any(strcmp({x.snapshots.name}, 'maxSpikingCurrent')), 'maxSpikingCurrent', 'overwriting ''maxSpikingCurrent'' snapshot');
+  x.snapshot('maxSpikingCurrent');
 
   for ii = 1:length(options.current_steps)
-    corelib.verb(options.verbosity, 'minSpikingCurrent', ['I_ext = ' num2str(options.current_steps(ii)) ' nA'])
+    corelib.verb(options.verbosity, 'maxSpikingCurrent', ['I_ext = ' num2str(options.current_steps(ii)) ' nA'])
 
-    x.reset('minSpikingCurrent');
+    x.reset('maxSpikingCurrent');
     x.I_ext = options.current_steps(ii);
 
     x.integrate;
@@ -87,7 +87,7 @@ function [I_ext, ii, metrics] = minSpikingCurrent(x, varargin)
     end
   end % for loop
 
-  corelib.verb(ii == length(options.current_steps) & options.verbosity, 'minSpikingCurrent', ['maximum iterations reached'])
+  corelib.verb(ii == length(options.current_steps) & options.verbosity, 'maxSpikingCurrent', ['maximum iterations reached'])
 
   I_ext = options.current_steps(ii);
 
