@@ -1,12 +1,12 @@
-% ### rheobase
+% ### minSpikingCurrent
 %
 %
 % **Syntax**
 %
 % ```matlab
-% [I_ext, index, metrics] = rheobase(x)
-% [I_ext, index, metrics] = rheobase(x, 'PropertyName', PropertyValue, ...)
-% [I_ext, index, metrics] = rheobase(x, options)
+% [I_ext, index, metrics] = minSpikingCurrent(x)
+% [I_ext, index, metrics] = minSpikingCurrent(x, 'PropertyName', PropertyValue, ...)
+% [I_ext, index, metrics] = minSpikingCurrent(x, options)
 % ```
 %
 % **Description**
@@ -68,13 +68,13 @@ function [I_ext, ii, metrics] = minSpikingCurrent(x, varargin)
   options = corelib.parseNameValueArguments(options, varargin{:});
 
   % save the initial state
-  corelib.verb(options.verbosity && any(strcmp({x.snapshots.name}, 'rheobase')), 'rheobase', 'overwriting ''rheobase'' snapshot');
-  x.snapshot('rheobase');
+  corelib.verb(options.verbosity && any(strcmp({x.snapshots.name}, 'minSpikingCurrent')), 'minSpikingCurrent', 'overwriting ''minSpikingCurrent'' snapshot');
+  x.snapshot('minSpikingCurrent');
 
   for ii = 1:length(options.current_steps)
-    corelib.verb(options.verbosity, 'rheobase', ['I_ext = ' num2str(options.current_steps(ii)) ' nA'])
+    corelib.verb(options.verbosity, 'minSpikingCurrent', ['I_ext = ' num2str(options.current_steps(ii)) ' nA'])
 
-    x.reset('rheobase');
+    x.reset('minSpikingCurrent');
     x.I_ext = options.current_steps(ii);
 
     x.integrate;
@@ -87,7 +87,7 @@ function [I_ext, ii, metrics] = minSpikingCurrent(x, varargin)
     end
   end % for loop
 
-  corelib.verb(ii == length(options.current_steps) & options.verbosity, 'rheobase', ['maximum iterations reached'])
+  corelib.verb(ii == length(options.current_steps) & options.verbosity, 'minSpikingCurrent', ['maximum iterations reached'])
 
   I_ext = options.current_steps(ii);
 
