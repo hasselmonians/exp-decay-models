@@ -52,18 +52,21 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
   spiketimes{3} = veclib.nonnans(xtools.findNSpikeTimes(V(:, 3) - mean(V(:, 3)), 600, 10));
 
   %% Cost due to number of spikes
-  % the number of spikes must be at least one per second of simulated time
 
   sim_time = x.t_end / 1000; % seconds
-  nSpikes = length(spiketimes);
-  nSpikes2 = length(spiketimes2);
+  for ii = 1:3
+    nSpikes = length(spiketimes{ii});
 
-  if nSpikes / sim_time < 1
-    costparts(1) = costparts(1) + 1e9;
-  end
+    % the number of spikes must be at least one per second of simulated time
+    if nSpikes / sim_time < 1
+      costparts(1) = costparts(1) + 1e9;
+    end
 
-  if nSpikes2 / sim_time < 1
-    costparts(1) = costparts(1) + 1e9;
+    % the number of spikes in the second phase must be at least ten per second of simulated time
+    if ii == 2 || nSpikes / sim_time < 10
+      costparts(1) = costparts(1) + 1e9
+    end
+
   end
 
   %% Cost due to the ratio of the ISIs
