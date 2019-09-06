@@ -1,8 +1,8 @@
 function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
 
-  cost = 0;
-  costparts = zeros(5, 1);
-  weights = [1, 1, 1, 1, 1];
+  % find an applied current that produces spikes
+  % then, simulate with more current,
+  % then, drop the current
 
   % figure out the minSpikingCurrent for the model
   I_ext = minSpikingCurrent(x, 'min_firing_rate', 1, 'verbosity', false);
