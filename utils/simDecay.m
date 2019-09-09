@@ -64,7 +64,7 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
 
     % the number of spikes in the second phase must be at least ten per second of simulated time
     if ii == 2 || nSpikes / sim_time < 10
-      costparts(1) = costparts(1) + 1e9
+      costparts(1) = costparts(1) + 1e9;
     end
 
   end
@@ -91,7 +91,7 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
 
   %% Cost due to time constant of firing rate change
   % the time constant should be within an acceptable range
-  
+
   costparts(4)  = xtools.binCost([0.5, 10], tau_fr(3));
 
   %% Compute the total cost
