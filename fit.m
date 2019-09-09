@@ -1,10 +1,10 @@
 p           = xfit;
 p.x         = x;
 p.options.UseParallel = true;
-p.SimFcn    = @simDecay;
+p.SimFcn    = @simSpiking;
 
 % parameters
-param_names = [x.find('*gbar')];
+param_names = [x.find('*gbar'); x.find('I_ext')];
 p.parameter_names = param_names;
 p.lb = zeros(1, length(p.parameter_names));
 p.ub = 2 * [x.get('*gbar')]';
@@ -29,7 +29,7 @@ rate        = NaN(nSims, 1);
 
 
 % try to load existing data file
-filename    = ['data-simDecay-' corelib.getComputerName '.mat'];
+filename    = ['data-simSpiking-' corelib.getComputerName '.mat'];
 if exist(filename)
   load(filename)
   start_idx = find(isnan(cost),1,'first')
