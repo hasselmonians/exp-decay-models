@@ -88,12 +88,12 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   % should be 0 if the firing rate decays exponentially
   % the mean of the ratio is the base of the exponent
 
-  costparts(3)  = sqCost(0, CV{3});
+  costparts(2)  = sqCost(0, CV{3});
 
   %% Cost due to time constant of firing rate change
   % the time constant should be within an acceptable range
 
-  costparts(4)  = xtools.binCost([0.5, 10], tau_fr(3));
+  costparts(3)  = xtools.binCost([0.5, 10], tau_fr(3));
 
   %% Compute the total cost
 
