@@ -31,7 +31,11 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   V(:, 1) = x.integrate;
 
   % compute the spike times
-  spiketimes{1} = veclib.nonnans(xtools.findNSpikeTimes(V(:, 1) - mean(V(:, 1)), 600, 10));
+  if any(isnan(V(:)))
+    costparts(1) = costparts(1) + 1e10;
+  else
+    spiketimes{1} = veclib.nonnans(xtools.findNSpikeTimes(V(:, 1) - mean(V(:, 1)), 600, 10));
+  end
 
   %% Simulate with much more current
 
@@ -40,7 +44,11 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   V(:, 2) = x.integrate;
 
   % compute the spike times
-  spiketimes{2} = veclib.nonnans(xtools.findNSpikeTimes(V(:, 2) - mean(V(:, 2)), 600, 10));
+  if any(isnan(V(:)))
+    costparts(1) = costparts(1) + 1e10;
+  else
+    spiketimes{2} = veclib.nonnans(xtools.findNSpikeTimes(V(:, 2) - mean(V(:, 2)), 600, 10));
+  end
 
   %% Simulate once more with the normal current
 
@@ -49,7 +57,17 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   V(:, 3) = x.integrate;
 
   % compute the spike times
-  spiketimes{3} = veclib.nonnans(xtools.findNSpikeTimes(V(:, 3) - mean(V(:, 3)), 600, 10));
+  if any(isnan(V(:)))
+    costparts(1) = costparts(1) + 1e10;
+  else
+    spiketimes{3} = veclib.nonnans(xtools.findNSpikeTimes(V(:, 3) - mean(V(:, 3)), 600, 10));
+  end
+
+  % if any simulations failed, terminate the optimization with a high cost
+  if any(isnan(V(:)))
+    cost = sum(weights * costparts);
+    return
+  end
 
   %% Cost due to number of spikes
 
@@ -64,7 +82,7 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
 
     % the number of spikes in the second phase must be at least ten per second of simulated time
     if ii == 2 || nSpikes / sim_time < 10
-      costparts(1) = costparts(1) + 1e9;
+      costparts(2) = costparts(1) + 1e9;
     end
 
   end
@@ -87,15 +105,19 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   % should be 0 if the firing rate decays exponentially
   % the mean of the ratio is the base of the exponent
 
-  costparts(2)  = sqCost(0, CV{3});
+  costparts(3)  = sqCost(0, CV{3});
 
   %% Cost due to time constant of firing rate change
   % the time constant should be within an acceptable range
 
-  costparts(3)  = xtools.binCost([0.5, 10], tau_fr(3));
+  costparts(4)  = xtools.binCost([0.5, 10], tau_fr(3));
 
   %% Compute the total cost
 
   cost      = sum(weights * costparts);
+
+  if isnan(cost)
+    cost = 3e10;
+  end
 
 end % function
