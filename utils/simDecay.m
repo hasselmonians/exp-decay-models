@@ -12,8 +12,8 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
   V           = NaN(x.t_end / x.dt, 3);
   spiketimes  = cell(3, 1);
   rat         = cell(3, 1);
-  mean_rat    = Nan(3, 1);
-  tau_fr      = Nan(3, 1);
+  mean_rat    = NaN(3, 1);
+  tau_fr      = NaN(3, 1);
 
   %% Figure out the minimum applied current for the model
 
@@ -72,9 +72,13 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
   %% Compute the ratio of adjacent interspike intervals (ISIs)
 
   for ii = 1:3
-    rat{ii} = ratio(1e-3 * diff(spiketimes{ii})); % ratio of adjacent ISIs in seconds
+    % ratio of adjacent ISIs in seconds
+    rat{ii} = ratio(1e-3 * diff(spiketimes{ii}));
+    % mean ratio of adjacent ISIs in seconds
     mean_rat(ii) = mean(rat{ii});
+    % coefficient of variation
     CV{ii} = std(rat{ii}) / mean_rat(ii);
+    % time constant, computed from the mean ISI ratio
     tau_fr(ii) = 1 / log(mean_rat(ii));
   end
 
@@ -83,12 +87,12 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
   % should be 0 if the firing rate decays exponentially
   % the mean of the ratio is the base of the exponent
 
-  costparts(3)  = sqCost(0, CV);
+  costparts(3)  = sqCost(0, CV{3});
 
   %% Cost due to time constant of firing rate change
   % the time constant should be within an acceptable range
-  tau_fr        = 1 / log(mean_rat);
-  costparts(4)  = xtools.binCost([0.5, 10], tau_fr);
+  
+  costparts(4)  = xtools.binCost([0.5, 10], tau_fr(3));
 
   %% Compute the total cost
 
