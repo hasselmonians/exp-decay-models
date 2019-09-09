@@ -55,15 +55,16 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
 
   sim_time = x.t_end / 1000; % seconds
   for ii = 1:3
+    keyboard
     nSpikes = length(spiketimes{ii});
 
     % the number of spikes must be at least one per second of simulated time
-    if nSpikes / sim_time > 1
+    if nSpikes / sim_time < 1
       costparts(1) = costparts(1) + 1e9;
     end
 
     % the number of spikes in the second phase must be at least ten per second of simulated time
-    if ii == 2 || nSpikes / sim_time > 10
+    if ii == 2 || nSpikes / sim_time < 10
       costparts(1) = costparts(1) + 1e9;
     end
 
