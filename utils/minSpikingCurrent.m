@@ -81,6 +81,13 @@ function [I_ext, ii, metrics] = minSpikingCurrent(x, varargin)
     x.integrate; % acquire steady-state
     V = x.integrate; % store voltage trace
 
+    % if the simulation fails, return NaNs
+    if isnan(V(:))
+      I_ext = NaN;
+      metrics = NaN;
+      return
+    end
+
     metrics = xtools.V2metrics(V - mean(V), options);
 
     if metrics.firing_rate >= options.min_firing_rate
