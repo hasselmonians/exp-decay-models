@@ -48,7 +48,7 @@ function [cost, rate, V, costparts] = simSpiking(x, ~, ~)
   if isempty(spiketimes)
     costparts(3) = 1e9;
   else
-    costparts(3) = sqCost(target_num_spikes, length(spiketimes));
+    costparts(3) = normSqCost(target_num_spikes, length(spiketimes));
   end
 
   %% Cost for spike height and spike trough
