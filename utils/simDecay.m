@@ -55,7 +55,6 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
 
   sim_time = x.t_end / 1000; % seconds
   for ii = 1:3
-    keyboard
     nSpikes = length(spiketimes{ii});
 
     % the number of spikes must be at least one per second of simulated time
