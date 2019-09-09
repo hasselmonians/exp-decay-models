@@ -75,10 +75,11 @@ function [I_ext, ii, metrics] = minSpikingCurrent(x, varargin)
     corelib.verb(options.verbosity, 'minSpikingCurrent', ['I_ext = ' num2str(options.current_steps(ii)) ' nA'])
 
     x.reset('minSpikingCurrent');
+    x.closed_loop = true;
     x.I_ext = options.current_steps(ii);
 
-    x.integrate;
-    V = x.integrate;
+    x.integrate; % acquire steady-state
+    V = x.integrate; % store voltage trace
 
     metrics = xtools.V2metrics(V - mean(V), options);
 
