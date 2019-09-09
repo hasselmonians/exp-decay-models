@@ -1,4 +1,4 @@
-function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
+function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
 
   % find an applied current that produces spikes
   % then, simulate with more current,
@@ -58,12 +58,12 @@ function [cost, V, I_ext, tau_fr, costparts] = simDecay(x, ~, ~)
     nSpikes = length(spiketimes{ii});
 
     % the number of spikes must be at least one per second of simulated time
-    if nSpikes / sim_time < 1
+    if nSpikes / sim_time > 1
       costparts(1) = costparts(1) + 1e9;
     end
 
     % the number of spikes in the second phase must be at least ten per second of simulated time
-    if ii == 2 || nSpikes / sim_time < 10
+    if ii == 2 || nSpikes / sim_time > 10
       costparts(1) = costparts(1) + 1e9;
     end
 
