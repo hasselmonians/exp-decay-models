@@ -21,35 +21,34 @@ function [cost, rate, V, costparts] = simSpiking(x, ~, ~)
   %% Cost for a failed integration
 
   if any(isnan(V))
-    costparts(1) = weights(1) * 1e9;
+    costparts(1) = 1e9;
   end
 
   %% Cost for number of spikes and firing rate
 
-  target_firing_rate  = 0.01; % MHz
-  target_num_spikes   = x.t_end * target_firing_rate; % unitless
+  target_firing_rate  = 10; % Hz
+  target_num_spikes   = (1e-3 * x.t_end) * target_firing_rate; % unitless
 
   % compute the spiketimes, stopping at a maximum of 600
   spiketimes = veclib.nonnans(xtools.findNSpikeTimes(V - mean(V), 600, 10));
 
   % compute the firing rate in Hz
-  ISIs = diff(spiketimes); % ms
-  rate = 1 / mean(ISIs); % MHz
+  ISIs = 1e-3 * diff(spiketimes); % s
+  rate = 1 / mean(ISIs); % Hz
   CV = std(ISIs) * rate; % unitless
-  rate = 1e3 * rate; % Hz
 
   % penalize irregular spiking
   if isnan(rate) || isempty(rate)
-    costparts(2) = weights(2) * 1e9;
+    costparts(2) = 1e9;
   else
-    costparts(2) = weights(2) * sqCost(0, CV);
+    costparts(2) = sqCost(0, CV);
   end
 
   % penalize the number of spikes about a target value
   if isempty(spiketimes)
-    costparts(3) = weights(3) * 1e9;
+    costparts(3) = 1e9;
   else
-    costparts(3) = weights(3) * sqCost(target_num_spikes, length(spiketimes));
+    costparts(3) = sqCost(target_num_spikes, length(spiketimes));
   end
 
   %% Cost for spike height and spike trough
@@ -65,14 +64,14 @@ function [cost, rate, V, costparts] = simSpiking(x, ~, ~)
   spiketrough = V(veclib.nonnans(xtools.findNSpikeTimes(-V + mean(V), 600, 10)));
 
   % penalize the spike height outside of a given range
-  costparts(4) = weights(4) * sum(xtools.binCost(target_spike_height, spikeheight));
+  costparts(4) = sum(xtools.binCost(target_spike_height, spikeheight));
 
   % penalize the spike trough outside of a given range
-  costparts(5) = weights(5) * sum(xtools.binCost(target_spike_trough, spiketrough));
+  costparts(5) = sum(xtools.binCost(target_spike_trough, spiketrough));
 
   %% Compute the final cost
 
-  cost = sum(costparts);
+  cost = sum(weights * costparts);
 
   if isnan(cost)
     cost = 1e12;
