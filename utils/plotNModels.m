@@ -8,6 +8,7 @@ function plotNModels(x, cost, param_names, params, n)
 
   [~, index] = sort(cost);
   cmap = colormaps.linspecer(n);
+  x.t_end = 1e3;
 
   for ii = 1:n
     x.reset;
