@@ -46,7 +46,7 @@ for ii = start_idx:nSims
 
     % set seed
     p.seed = p.ub .* rand(size(p.ub));
-    p.seed = params(ii, :);
+    % p.seed = params(ii, :);
 
     % run xfit
     for qq = 1:nEpochs
@@ -60,7 +60,7 @@ for ii = start_idx:nSims
     disp(['saved simulation ' num2str(ii)])
 
   catch
-
+    % keyboard
     disp('Something went wrong.')
 
   end
