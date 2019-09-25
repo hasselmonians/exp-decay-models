@@ -13,7 +13,7 @@ function [cost, rate, V, I_ext, costparts] = simSpiking(x, ~, ~)
 
   %% Cost for a failed integration
 
-  if any(isnan(V) || isnan(I_ext))
+  if any((isnan(V)) || isnan(I_ext)
     costparts(1) = 1e9;
   end
 
