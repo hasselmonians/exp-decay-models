@@ -1,10 +1,10 @@
 p           = xfit;
 p.x         = x;
 p.options.UseParallel = true;
-p.SimFcn    = @simDecay;
+p.SimFcn    = @simSpiking;
 
 % parameters
-param_names = [x.find('*gbar'); x.find('I_ext')];
+param_names = [x.find('*gbar')];
 p.parameter_names = param_names;
 p.lb = zeros(1, length(p.parameter_names));
 p.ub = 2 * [x.get('*gbar')]';
@@ -24,14 +24,12 @@ nParams     = length(p.parameter_names);
 params      = NaN(nSims, nParams);
 cost        = NaN(nSims, 1);
 rate        = NaN(nSims, 1);
+I_ext       = NaN(nSims, 1);
 
 %% Fit parameters
 
-% acquire seeds
-load(['data-simSpiking-' corelib.getComputerName '.mat'])
-
 % try to load existing data file
-filename    = ['data-simDecay-' corelib.getComputerName '.mat'];
+filename    = ['data-simSpiking-' corelib.getComputerName '.mat'];
 if exist(filename)
   load(filename)
   start_idx = find(isnan(cost),1,'first')
@@ -47,7 +45,7 @@ for ii = start_idx:nSims
   try
 
     % set seed
-    % p.seed = p.ub .* rand(size(p.ub));
+    p.seed = p.ub .* rand(size(p.ub));
     p.seed = params(ii, :);
 
     % run xfit
@@ -57,8 +55,8 @@ for ii = start_idx:nSims
 
     % save
     params(ii, :)  = p.seed;
-    [cost(ii), rate(ii)] = p.SimFcn(x);
-    save(filename, 'cost', 'params', 'rate', 'param_names');
+    [cost(ii), rate(ii), ~, I_ext(ii), ~] = p.SimFcn(x);
+    save(filename, 'cost', 'params', 'rate', 'I_ext', 'param_names');
     disp(['saved simulation ' num2str(ii)])
 
   catch
