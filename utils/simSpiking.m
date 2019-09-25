@@ -1,4 +1,4 @@
-function [cost, rate, V, costparts] = simSpiking(x, ~, ~)
+function [cost, rate, V, I_ext, costparts] = simSpiking(x, ~, ~)
 
   % function to be passed to the optimizer
   % computes the firing rate and chooses a cell with a firing rate around 10 Hz
