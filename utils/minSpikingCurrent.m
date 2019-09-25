@@ -4,9 +4,9 @@
 % **Syntax**
 %
 % ```matlab
-% [I_ext, index, metrics] = minSpikingCurrent(x)
-% [I_ext, index, metrics] = minSpikingCurrent(x, 'PropertyName', PropertyValue, ...)
-% [I_ext, index, metrics] = minSpikingCurrent(x, options)
+% [I_ext, ii, metrics, V] = minSpikingCurrent(x)
+% [I_ext, ii, metrics, V] = minSpikingCurrent(x, 'PropertyName', PropertyValue, ...)
+% [I_ext, ii, metrics, V] = minSpikingCurrent(x, options)
 % ```
 %
 % **Description**
@@ -45,7 +45,7 @@
 %     xtools.findNSpikeTimes
 %
 
-function [I_ext, ii, metrics] = minSpikingCurrent(x, varargin)
+function [I_ext, ii, metrics, V] = minSpikingCurrent(x, varargin)
 
   % options and defaults
   options = struct;
