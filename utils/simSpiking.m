@@ -40,4 +40,7 @@ function [cost, rate, V, I_ext, costparts] = simSpiking(x, ~, ~)
     cost = 1e12;
   end
 
+  % compute outputs
+  rate = metrics.firing_rate;
+
 end % function
