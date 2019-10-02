@@ -42,7 +42,7 @@ end
 % main loop
 for ii = start_idx:nSims
 
-  try
+  % try
 
     % set seed
     p.seed = p.ub .* rand(size(p.ub));
@@ -59,10 +59,10 @@ for ii = start_idx:nSims
     save(filename, 'cost', 'params', 'rate', 'I_ext', 'param_names');
     disp(['saved simulation ' num2str(ii)])
 
-  catch
+  % catch e
     % keyboard
-    disp('Something went wrong.')
+    % disp('Something went wrong.')
 
-  end
+  % end
 
 end
