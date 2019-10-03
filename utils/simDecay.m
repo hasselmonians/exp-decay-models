@@ -4,11 +4,10 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   % then, simulate with more current,
   % then, drop the current
 
+  % containers
   cost        = 0;
   costparts   = zeros(5, 1);
   weights     = [1, 1, 1, 1, 1];
-
-  % containers
   V           = NaN(x.t_end / x.dt, 3);
   spiketimes  = cell(3, 1);
   rat         = cell(3, 1);
@@ -17,57 +16,60 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
 
   %% Figure out the minimum applied current for the model
 
-  I_ext       = minSpikingCurrent(x, 'min_firing_rate', 1, 'verbosity', false);
-  I_ext_2     = minSpikingCurrent(x, 'min_firing_rate', 10, 'verbosity', false);
+  I_ext       = minSpikingCurrent(x, 'min_firing_rate', 10, 'current_steps', 0:0.001:1, 'verbosity', false);
+  I_ext2      = minSpikingCurrent(x, 'min_firing_rate', 20, 'current_steps', I_ext:0.001:2*I_ext, 'verbosity', false);
 
-  %% Simulate with some injected current
+  %% Simulate the three conditions
 
   x.reset;
   x.closed_loop = true;
   x.I_ext = I_ext;
+
   % reach a tonic-spiking steady-state
   x.integrate;
+
   % simulate and save the voltage
   V(:, 1) = x.integrate;
 
-  % compute the spike times
-  if any(isnan(V(:)))
-    costparts(1) = costparts(1) + 1e10;
-  else
-    spiketimes{1} = veclib.nonnans(xtools.findNSpikeTimes(V(:, 1) - mean(V(:, 1)), 600, 10));
+  % penalize models with NaN voltage
+  if any(isnan(V(:, 1)))
+    cost = 1e10;
+    return
   end
 
-  %% Simulate with much more current
-
-  x.reset;
-  x.I_ext = I_ext_2;
+  % increase the current and keep simulating
+  x.I_ext = I_ext2;
   V(:, 2) = x.integrate;
 
-  % compute the spike times
-  if any(isnan(V(:)))
-    costparts(1) = costparts(1) + 1e10;
-  else
-    spiketimes{2} = veclib.nonnans(xtools.findNSpikeTimes(V(:, 2) - mean(V(:, 2)), 600, 10));
+  % penalize models with NaN voltage
+  if any(isnan(V(:, 2)))
+    cost = 1e10;
+    return
   end
 
-  %% Simulate once more with the normal current
-
-  x.reset
+  % suddenly drop the current back to the initial value
   x.I_ext = I_ext;
   V(:, 3) = x.integrate;
 
-  % compute the spike times
-  if any(isnan(V(:)))
-    costparts(1) = costparts(1) + 1e10;
-  else
-    spiketimes{3} = veclib.nonnans(xtools.findNSpikeTimes(V(:, 3) - mean(V(:, 3)), 600, 10));
-  end
-
-  % if any simulations failed, terminate the optimization with a high cost
-  if any(isnan(V(:)))
-    cost = sum(weights * costparts);
+  % penalize models with NaN voltage
+  if any(isnan(V(:, 3)))
+    cost = 1e10;
     return
   end
+
+  %% Compute the spike times
+
+  for ii = 1:3
+    spiketimes{ii} = veclib.nonnans(xtools.findNSpikeTimes(V(:, ii) - mean(V(:, ii)), 600, 10));
+  end
+
+  %% Compute cost due to number of spikes/firing rate
+
+  sim_time = x.t_end / 1000; % seconds
+
+  
+
+  % ------------------------------------
 
   %% Cost due to number of spikes
 
