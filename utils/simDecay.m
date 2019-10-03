@@ -13,6 +13,7 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   rat         = cell(3, 1);
   mean_rat    = NaN(3, 1);
   tau_fr      = NaN(3, 1);
+  CV          = NaN(3, 1);
 
   %% Figure out the minimum applied current for the model
 
@@ -76,22 +77,21 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   % penalize model if the frequency of the I_ext2 condition is not greater than 10 Hz
   costparts(1) = costparts(1) + xtools.binCost([12, Inf], spiketimes{2});
 
-
-
-  % ------------------------------------
-
   %% Compute the ratio of adjacent interspike intervals (ISIs)
 
   for ii = 1:3
-    % ratio of adjacent ISIs in seconds
+    % ratio of adjacent ISIs (seconds / seconds)
     rat{ii} = ratio(1e-3 * diff(spiketimes{ii}));
-    % mean ratio of adjacent ISIs in seconds
+    % mean ratio of adjacent ISIs (seconds / seconds)
     mean_rat(ii) = mean(rat{ii});
     % coefficient of variation
-    CV{ii} = std(rat{ii}) / mean_rat(ii);
-    % time constant, computed from the mean ISI ratio
+    CV(ii) = std(rat{ii}) / mean_rat(ii);
+    % time constant , computed from the mean ISI ratio
     tau_fr(ii) = 1 / log(mean_rat(ii));
   end
+
+
+  % ------------------------------------
 
   %% Cost due to variation around exponential decay in firing rate
   % the coefficient of variation (CV) of the ratio of adjacent interspike intervals (ISIs)
