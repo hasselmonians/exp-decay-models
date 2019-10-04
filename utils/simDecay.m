@@ -79,6 +79,7 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
 
   %% Compute the ratio of adjacent interspike intervals (ISIs)
 
+  % gather relevant metrics
   for ii = 1:3
     % ratio of adjacent ISIs (seconds / seconds)
     rat{ii} = ratio(1e-3 * diff(spiketimes{ii}));
@@ -90,24 +91,25 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
     tau_fr(ii) = 1 / log(mean_rat(ii));
   end
 
-
-  % ------------------------------------
-
   %% Cost due to variation around exponential decay in firing rate
   % the coefficient of variation (CV) of the ratio of adjacent interspike intervals (ISIs)
   % should be 0 if the firing rate decays exponentially
   % the mean of the ratio is the base of the exponent
 
-  costparts(3)  = sqCost(0, CV{3});
+  for ii = 1:3
+    costparts(2) = costparts(2) + sqCost(0, CV{ii});
+  end
 
   %% Cost due to time constant of firing rate change
   % the time constant should be within an acceptable range
 
-  costparts(4)  = xtools.binCost([0.5, 10], tau_fr(3));
+  costparts(3) = xtools.binCost([0.5, 10], tau_fr(3));
+
+
 
   %% Compute the total cost
 
-  cost      = sum(weights * costparts);
+  cost      = weights * costparts; % dot product => scalar cost
 
   if isnan(cost)
     cost = 3e10;
