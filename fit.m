@@ -1,7 +1,7 @@
 p           = xfit;
 p.x         = x;
 p.options.UseParallel = true;
-p.SimFcn    = @simSpiking;
+p.SimFcn    = @simDecay;
 
 % parameters
 param_names = [x.find('*gbar')];
@@ -29,7 +29,7 @@ I_ext       = NaN(nSims, 1);
 %% Fit parameters
 
 % try to load existing data file
-filename    = ['data-simSpiking-' corelib.getComputerName '.mat'];
+filename    = ['data-simDecay-' corelib.getComputerName '.mat'];
 if exist(filename)
   load(filename)
   start_idx = find(isnan(cost),1,'first')
@@ -38,14 +38,20 @@ else
   start_idx = 1;
 end
 
+% load up initial parameters
+seeds = load('data-simSpiking-rkc-has-ld-0001.mat')
+
 
 % main loop
 for ii = start_idx:nSims
 
-  % try
+  try
 
     % set seed
-    p.seed = p.ub .* rand(size(p.ub));
+    % p.seed = p.ub .* rand(size(p.ub));
+    % parameters from one of the pretrained seeds +/- 20%
+    p.seed = seeds.params(randi(length(seeds.params)), :);
+    p.seed = p.seed .* (0.8 + 0.4 * rand(1, size(seeds.params, 2)));
     % p.seed = params(ii, :);
 
     % run xfit
@@ -59,10 +65,10 @@ for ii = start_idx:nSims
     save(filename, 'cost', 'params', 'rate', 'I_ext', 'param_names');
     disp(['saved simulation ' num2str(ii)])
 
-  % catch e
+  catch e
     % keyboard
-    % disp('Something went wrong.')
+    disp('Something went wrong.')
 
-  % end
+  end
 
 end
