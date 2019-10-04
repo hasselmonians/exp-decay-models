@@ -105,7 +105,9 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
 
   costparts(3) = xtools.binCost([0.5, 10], tau_fr(3));
 
-
+  if isnan(costparts(3)) || isinf(tau_fr(3))
+    costparts(3) = 1e9;
+  end
 
   %% Compute the total cost
 
