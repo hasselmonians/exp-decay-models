@@ -97,7 +97,7 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   % the mean of the ratio is the base of the exponent
 
   for ii = 1:3
-    costparts(2) = costparts(2) + sqCost(0, CV{ii});
+    costparts(2) = costparts(2) + sqCost(0, CV(ii));
   end
 
   %% Cost due to time constant of firing rate change
