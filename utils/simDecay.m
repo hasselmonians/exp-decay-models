@@ -69,13 +69,13 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   sim_time = x.t_end / 1000; % seconds
 
   % penalize model if the frequency of the I_ext2 condition is not significantly greater
-  costparts(1) = costparts(1) + xtools.binCost([1.2, Inf]*spiketimes{1}, spiketimes{2});
+  costparts(1) = costparts(1) + xtools.binCost([1.2, Inf]*getFrequency(spiketimes{1}, sim_time), getFrequency(spiketimes{2}, sim_time));
 
   % penalize model if the frequency of the I_ext condition is not greater than 10 Hz
-  costparts(1) = costparts(1) + xtools.binCost([10, Inf], spiketimes{1});
+  costparts(1) = costparts(1) + xtools.binCost([10, Inf], getFrequency(spiketimes{1}, sim_time));
 
   % penalize model if the frequency of the I_ext2 condition is not greater than 10 Hz
-  costparts(1) = costparts(1) + xtools.binCost([12, Inf], spiketimes{2});
+  costparts(1) = costparts(1) + xtools.binCost([12, Inf], getFrequency(spiketimes{2}, sim_time));
 
   %% Compute the ratio of adjacent interspike intervals (ISIs)
 
@@ -116,3 +116,7 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   end
 
 end % function
+
+function f = getFrequency(spiketimes, time)
+  f = length(spiketimes) / time;
+end
