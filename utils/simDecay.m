@@ -7,7 +7,7 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   % containers
   cost        = 0;
   costparts   = zeros(5, 1);
-  weights     = [1, 1, 1, 1, 1];
+  weights     = [1, 1e2, 1, 1e2, 1];
   V           = NaN(x.t_end / x.dt, 3);
   spiketimes  = cell(3, 1);
   rat         = cell(3, 1);
@@ -108,6 +108,11 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   if isnan(costparts(3)) || isinf(tau_fr(3))
     costparts(3) = 1e9;
   end
+
+  %% Penalize mean ratio being unity
+  % we want to see models that have decay
+
+  costparts(4) = xtools.binCost([0, 0.9], mean_rat(3));
 
   %% Compute the total cost
 
