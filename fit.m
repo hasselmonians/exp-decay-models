@@ -61,12 +61,12 @@ for ii = start_idx:nSims
 
     % save
     params(ii, :)  = p.seed;
-    [cost(ii), rate(ii), ~, I_ext(ii), ~] = p.SimFcn(x);
+    [cost(ii), ~, I_ext(ii), rate(ii), ~] = p.SimFcn(x);
     save(filename, 'cost', 'params', 'rate', 'I_ext', 'param_names');
     disp(['saved simulation ' num2str(ii)])
 
   catch e
-    % keyboard
+    keyboard
     disp('Something went wrong.')
 
   end
