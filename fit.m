@@ -23,7 +23,7 @@ nParams     = length(p.parameter_names);
 % output vectors
 params      = NaN(nSims, nParams);
 cost        = NaN(nSims, 1);
-rate        = NaN(nSims, 3);
+mean_rat    = NaN(nSims, 3);
 I_ext       = NaN(nSims, 1);
 
 %% Fit parameters
@@ -61,8 +61,8 @@ for ii = start_idx:nSims
 
     % save
     params(ii, :)  = p.seed;
-    [cost(ii), ~, I_ext(ii), rate(ii, :), ~] = p.SimFcn(x);
-    save(filename, 'cost', 'params', 'rate', 'I_ext', 'param_names');
+    [cost(ii), ~, I_ext(ii), mean_rat(ii, :), ~] = p.SimFcn(x);
+    save(filename, 'cost', 'params', 'mean_rat', 'I_ext', 'param_names');
     disp(['saved simulation ' num2str(ii)])
 
   catch e
