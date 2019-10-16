@@ -28,6 +28,7 @@ function [cost, V, Ca, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, 
   x.I_ext = I_ext;
 
   % reach a tonic-spiking steady-state
+  x.t_end = 5e3;
   x.integrate;
 
   % simulate and save the voltage
@@ -41,6 +42,7 @@ function [cost, V, Ca, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, 
   end
 
   % increase the current and keep simulating
+  x.t_end = 10;
   x.I_ext = I_ext2;
   [V(:, 2), Ca_] = x.integrate;
   Ca(:, 2) = Ca_(:, 1);
@@ -52,6 +54,7 @@ function [cost, V, Ca, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, 
   end
 
   % suddenly drop the current back to the initial value
+  x.t_end = 5e3;
   x.I_ext = I_ext;
   [V(:, 3), Ca_] = x.integrate;
   Ca(:, 3) = Ca_(:, 1);
