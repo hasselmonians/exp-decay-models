@@ -12,6 +12,7 @@ p.ub = 2 * [x.get('*gbar')]';
 % set procrustes options
 p.options.MaxTime = 900;
 p.options.SwarmSize = 24;
+p.options.UseParallel = true;
 
 %% Initialize optimization parameters
 
@@ -62,7 +63,7 @@ for ii = start_idx:nSims
 
     % save
     params(ii, :)  = p.seed;
-    [cost(ii), ~, ~ I_ext(ii, :), mean_rat(ii, :), ~, ~, costparts(ii, :)] = p.SimFcn(x);
+    [cost(ii), ~, ~, I_ext(ii, :), mean_rat(ii, :), ~, ~, costparts(ii, :)] = p.SimFcn(x);
     save(filename, 'cost', 'params', 'mean_rat', 'I_ext', 'param_names', 'costparts');
     disp(['saved simulation ' num2str(ii)])
 

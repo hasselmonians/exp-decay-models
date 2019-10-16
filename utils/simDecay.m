@@ -8,8 +8,10 @@ function [cost, V, Ca, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, 
   cost        = 0;
   costparts   = zeros(5, 1);
   weights     = [1, 1e2, 1, 1e2, 1];
-  V           = NaN(x.t_end / x.dt, 3);
-  Ca          = NaN(x.t_end / x.dt, 3);
+  % V           = NaN(x.t_end / x.dt, 3);
+  % Ca          = NaN(x.t_end / x.dt, 3);
+  V           = cell(3, 1);
+  Ca          = cell(3, 1);
   spiketimes  = cell(3, 1);
   rat         = cell(3, 1);
   mean_rat    = NaN(3, 1);
@@ -32,11 +34,11 @@ function [cost, V, Ca, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, 
   x.integrate;
 
   % simulate and save the voltage
-  [V(:, 1), Ca_] = x.integrate;
-  Ca(:, 1) = Ca_(:, 1);
+  [V{1}, Ca_] = x.integrate;
+  Ca{1} = Ca_(:, 1);
 
   % penalize models with NaN voltage
-  if any(isnan(V(:, 1)))
+  if any(isnan(V{1}))
     cost = 1e10;
     return
   end
@@ -44,11 +46,11 @@ function [cost, V, Ca, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, 
   % increase the current and keep simulating
   x.t_end = 10;
   x.I_ext = I_ext2;
-  [V(:, 2), Ca_] = x.integrate;
-  Ca(:, 2) = Ca_(:, 1);
+  [V{2}, Ca_] = x.integrate;
+  Ca{2} = Ca_(:, 1);
 
   % penalize models with NaN voltage
-  if any(isnan(V(:, 2)))
+  if any(isnan(V{2}))
     cost = 1e10;
     return
   end
@@ -56,11 +58,11 @@ function [cost, V, Ca, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, 
   % suddenly drop the current back to the initial value
   x.t_end = 5e3;
   x.I_ext = I_ext;
-  [V(:, 3), Ca_] = x.integrate;
-  Ca(:, 3) = Ca_(:, 1);
+  [V{3}, Ca_] = x.integrate;
+  Ca{3} = Ca_(:, 1);
 
   % penalize models with NaN voltage
-  if any(isnan(V(:, 3)))
+  if any(isnan(V{3}))
     cost = 1e10;
     return
   end
@@ -68,7 +70,7 @@ function [cost, V, Ca, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, 
   %% Compute the spike times
 
   for ii = 1:3
-    spiketimes{ii} = veclib.nonnans(xtools.findNSpikeTimes(V(:, ii) - mean(V(:, ii)), 600, 10));
+    spiketimes{ii} = veclib.nonnans(xtools.findNSpikeTimes(V{ii} - mean(V{ii}), 600, 10));
   end
 
   %% Compute cost due to number of spikes/firing rate
