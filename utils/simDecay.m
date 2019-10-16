@@ -1,4 +1,4 @@
-function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
+function [cost, V, Ca, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
 
   % find an applied current that produces spikes
   % then, simulate with more current,
@@ -9,6 +9,7 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   costparts   = zeros(5, 1);
   weights     = [1, 1e2, 1, 1e2, 1];
   V           = NaN(x.t_end / x.dt, 3);
+  Ca          = NaN(x.t_end / x.dt, 3);
   spiketimes  = cell(3, 1);
   rat         = cell(3, 1);
   mean_rat    = NaN(3, 1);
@@ -30,7 +31,8 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   x.integrate;
 
   % simulate and save the voltage
-  V(:, 1) = x.integrate;
+  [V(:, 1), Ca_] = x.integrate;
+  Ca(:, 1) = Ca_(:, 1);
 
   % penalize models with NaN voltage
   if any(isnan(V(:, 1)))
@@ -40,7 +42,8 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
 
   % increase the current and keep simulating
   x.I_ext = I_ext2;
-  V(:, 2) = x.integrate;
+  [V(:, 2), Ca_] = x.integrate;
+  Ca(:, 2) = Ca_(:, 1);
 
   % penalize models with NaN voltage
   if any(isnan(V(:, 2)))
@@ -50,7 +53,8 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
 
   % suddenly drop the current back to the initial value
   x.I_ext = I_ext;
-  V(:, 3) = x.integrate;
+  [V(:, 3), Ca_] = x.integrate;
+  Ca(:, 3) = Ca_(:, 1);
 
   % penalize models with NaN voltage
   if any(isnan(V(:, 3)))
@@ -74,7 +78,7 @@ function [cost, V, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
   % penalize model if the frequency of the I_ext condition is not greater than 10 Hz
   costparts(1) = costparts(1) + xtools.binCost([10, 1e9], getFrequency(spiketimes{1}, sim_time));
 
-  % penalize model if the frequency of the I_ext2 condition is not greater than 10 Hz
+  % penalize model if the frequency of the I_ext2 condition is not greater than 12 Hz
   costparts(1) = costparts(1) + xtools.binCost([12, 1e9], getFrequency(spiketimes{2}, sim_time));
 
   %% Compute the ratio of adjacent interspike intervals (ISIs)
