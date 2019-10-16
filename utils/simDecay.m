@@ -126,6 +126,9 @@ function [cost, V, Ca, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, 
     cost = 3e10;
   end
 
+  % output both injected currents
+  I_ext = [I_ext, I_ext2];
+
 end % function
 
 function f = getFrequency(spiketimes, time)
