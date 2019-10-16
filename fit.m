@@ -40,7 +40,7 @@ else
 end
 
 % load up initial parameters
-seeds = load('data-simSpiking-rkc-has-ld-0001.mat')
+seeds = load('data/data-simSpiking-rkc-has-ld-0001.mat')
 
 
 % main loop
