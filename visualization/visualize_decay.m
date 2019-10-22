@@ -22,12 +22,14 @@ for ii = 1:5
 
   % plot the voltage
   ax(2) = subplot(3, 1, 2);
-  t = 1e-3 * x.dt * (1:length(V(:)));
-  plot(t, V(:));
+  % collect the voltage in a single vector
+  V_vec = cat(1, V{:});
+  t = 1e-3 * x.dt * (1:length(V_vec));
+  plot(t, V_vec);
 
   % plot the firing rate
   ax(1) = subplot(3, 1, 1);
-  spiketimes = veclib.nonnans(xtools.findNSpikeTimes(V(:) - mean(V(:)), 600, 10));
+  spiketimes = veclib.nonnans(xtools.findNSpikeTimes(V_vec - mean(V_vec), 600, 10));
   rate = 1 ./ (1e-3 * diff(spiketimes));
   plot(1e-3 * x.dt * spiketimes(1:end-1), rate);
 
@@ -38,7 +40,8 @@ for ii = 1:5
   title(ax(1), ['parameter set: ' num2str(costs_ordered(ii))])
 
   ax(3) = subplot(3, 1, 3);
-  plot(t, Ca(:))
+  Ca_vec = cat(1, Ca{:});
+  plot(t, Ca_vec)
 
   figlib.pretty('PlotBuffer', 0.1, 'LineWidth', 1)
 end
