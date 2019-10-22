@@ -68,7 +68,7 @@ for ii = start_idx:nSims
     disp(['saved simulation ' num2str(ii)])
 
   catch e
-    keyboard
+%     keyboard
     disp('Something went wrong.')
 
   end
