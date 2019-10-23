@@ -1,3 +1,5 @@
+model_howard
+
 p           = xfit;
 p.x         = x;
 p.options.UseParallel = true;
@@ -46,8 +48,8 @@ seeds = load('data/data-simSpiking-rkc-has-ld-0001.mat')
 
 % main loop
 for ii = start_idx:nSims
-
-  try
+  %
+  % try
 
     % set seed
     % p.seed = p.ub .* rand(size(p.ub));
@@ -67,10 +69,10 @@ for ii = start_idx:nSims
     save(filename, 'cost', 'params', 'mean_rat', 'I_ext', 'param_names', 'costparts');
     disp(['saved simulation ' num2str(ii)])
 
-  catch e
-%     keyboard
-    disp('Something went wrong.')
-
-  end
+%   catch e
+% %     keyboard
+%     disp('Something went wrong.')
+%
+%   end
 
 end
