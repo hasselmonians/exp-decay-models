@@ -1,4 +1,4 @@
-function [cost, V, Ca, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, ~)
+function [cost, V, Ca, I_ext, mean_rat, CV, tau_fr, costparts, weights] = simDecay(x, ~, ~)
 
   % find an applied current that produces spikes
   % then, simulate with more current,
