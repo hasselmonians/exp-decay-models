@@ -7,7 +7,7 @@ function [cost, V, Ca, I_ext, mean_rat, CV, tau_fr, costparts] = simDecay(x, ~, 
   % containers
   cost        = 0;
   costparts   = zeros(5, 1);
-  weights     = [1, 1e2, 1, 1e2, 1];
+  weights     = [1e9, 1e2, 1, 1e2, 1];
   % V           = NaN(x.t_end / x.dt, 3);
   % Ca          = NaN(x.t_end / x.dt, 3);
   V           = cell(3, 1);
