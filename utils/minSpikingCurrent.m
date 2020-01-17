@@ -49,13 +49,13 @@ function [I_ext, ii, metrics, V] = minSpikingCurrent(x, varargin)
 
   % options and defaults
   options = struct;
-  options.min_firing_rate = 1;
-  options.spike_threshold = 10;
-  options.debug = false;
-  options.current_steps = 0:0.01:1;
-  options.sampling_rate = 1/x.dt;
-  options.ibi_thresh = 300;
-  options.verbosity = true;
+  options.min_firing_rate = 1; % Hz
+  options.spike_threshold = 10; % mV
+  options.debug = false; % boolean
+  options.current_steps = 0:0.01:1; % nA
+  options.sampling_rate = 1/(1000 * x.dt); % Hz
+  options.ibi_thresh = 300; % ms
+  options.verbosity = true; % boolean
 
   options = orderfields(options);
 
