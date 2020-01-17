@@ -4,6 +4,6 @@ function [cost, I_ext] = testCost(x, ~, ~)
 
   I_ext = minSpikingCurrent(x, 'current_steps', 0:0.001:1, 'min_firing_rate', 10, 'verbosity', false);
 
-  cost = normSqCost(0.2, I_ext);
+  cost = sqCost(0.2, I_ext, 'Normalize', true);
 
 end
