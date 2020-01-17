@@ -26,12 +26,22 @@ function cost = cost_fI(x, ~, ~)
   x.t_end = 10e3; % ms
   I = x.rheobase('nSpikes', 100);
 
+  if isnan(I)
+    cost = 1e12;
+    return
+  end
+
   %% Compute the fI curve
 
   fI = x.fI('I_min', I, 'I_max', 5*I, 'n_steps', 11, 't_end', 10e3);
 
   current_steps = fI.I;
   firing_rate = fI.f_up;
+
+  if any(isnan(firing_rate) || isinf(firing_rate))
+    cost = 1e12;
+    return
+  end
 
   %% Fit a linear model to the fI curve
 
