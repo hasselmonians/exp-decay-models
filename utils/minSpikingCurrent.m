@@ -45,17 +45,19 @@
 %     xtools.findNSpikeTimes
 %
 
-function [I_ext, ii, metrics, V] = minSpikingCurrent(x, varargin)
+function [varargout] = minSpikingCurrent(x, varargin)
+
+  %% Preamble
 
   % options and defaults
   options = struct;
-  options.min_firing_rate = 1;
-  options.spike_threshold = 10;
-  options.debug = false;
-  options.current_steps = 0:0.01:1;
-  options.sampling_rate = 1/x.dt;
-  options.ibi_thresh = 300;
-  options.verbosity = true;
+  options.min_firing_rate = 1; % Hz
+  options.spike_threshold = 10; % mV
+  options.debug = false; % boolean
+  options.current_steps = 0:0.01:1; % nA
+  options.sampling_rate = 1/(1000 * x.dt); % Hz
+  options.ibi_thresh = 300; % ms
+  options.verbosity = true; % boolean
 
   options = orderfields(options);
 
@@ -68,8 +70,18 @@ function [I_ext, ii, metrics, V] = minSpikingCurrent(x, varargin)
   options = corelib.parseNameValueArguments(options, varargin{:});
 
   % save the initial state
-  corelib.verb(options.verbosity && any(strcmp({x.snapshots.name}, 'minSpikingCurrent')), 'minSpikingCurrent', 'overwriting ''minSpikingCurrent'' snapshot');
+  if any(strcmp({x.snapshots.name}, 'minSpikingCurrent'))
+    corelib.verb(options.verbosity, 'minSpikingCurrent', 'overwriting ''minSpikingCurrent'' snapshot')
+  else
+    corelib.verb(options.verbosity, 'minSpikingCurrent', 'creating ''minSpikingCurrent'' snapshot')
+  end
+
   x.snapshot('minSpikingCurrent');
+
+  %% Main loop
+
+  % iterate through the current steps and count the number of spikes
+  % stop when the firing rate is equal to or greater than the min firing rate parameter
 
   for ii = 1:length(options.current_steps)
     corelib.verb(options.verbosity, 'minSpikingCurrent', ['I_ext = ' num2str(options.current_steps(ii)) ' nA'])
@@ -83,20 +95,34 @@ function [I_ext, ii, metrics, V] = minSpikingCurrent(x, varargin)
 
     % if the simulation fails, return NaNs
     if isnan(V(:))
+      corelib.verb(options.verbosity, 'minSpikingCurrent', 'ERROR: voltage is NaN, aborting...')
       I_ext = NaN;
       metrics = NaN;
+      varargout{1} = I_ext;
+      varargout{2} = ii;
+      varargout{3} = metrics;
+      varargout{4} = V;
       return
     end
 
+    % compute metrics of the voltage trace
     metrics = xtools.V2metrics(V - mean(V), options);
 
+    % break the loop if the stop criteria is reached
     if metrics.firing_rate >= options.min_firing_rate
       break
     end
   end % for loop
 
+
   corelib.verb(ii == length(options.current_steps) & options.verbosity, 'minSpikingCurrent', ['maximum iterations reached'])
 
+
+  % outputs
   I_ext = options.current_steps(ii);
+  varargout{1} = I_ext;
+  varargout{2} = ii;
+  varargout{3} = metrics;
+  varargout{4} = V;
 
 end % function
