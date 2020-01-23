@@ -73,7 +73,7 @@ function [varargout] = batchFunction(varargin)
       p.seed = options.seeds(randi(nSeeds), :);
       p.seed = p.seed .* (0.8 + 0.4 * rand(1, nParams));
     else
-      p.seed = p.ub .* rand(nParams);
+      p.seed = p.ub .* rand(1, nParams);
     end
 
     % run xfit
