@@ -1,4 +1,4 @@
-function batchFunction(varvargin)
+function batchFunction(varargin)
 
   % options & defaults
   options = struct;
