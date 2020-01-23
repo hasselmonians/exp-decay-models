@@ -57,14 +57,14 @@ function cost = cost_fI(x, ~, ~)
 
   % cost due to firing rate
   for ii = 1:length(firing_rate)
-    cost(1) = cost(1) + xtools.binCost(target_firing_rate, firing_rate(ii));
+    costs(1) = costs(1) + xtools.binCost(target_firing_rate, firing_rate(ii));
   end
 
-  % cost due to normalized gain
-  cost(2) = cost(2) + xtools.binCost(target_norm_gain, p(1));
+  % costs due to normalized gain
+  costs(2) = costs(2) + xtools.binCost(target_norm_gain, p(1));
 
-  % cost due to goodness-of-fit
-  cost(3) = cost(3) + sqCost(target_rsq, rsq);
+  % costs due to goodness-of-fit
+  costs(3) = costs(3) + sqCost(target_rsq, rsq);
 
   %% Compute the total cost
 
