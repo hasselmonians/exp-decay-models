@@ -9,7 +9,7 @@
 % the algorithm should be agnostic to whether the model is type I or type II excitable
 % by making use of computing the rheobase
 
-function cost = cost_fI(x, ~, ~)
+function [cost, costs, I, fI] = cost_fI(x, ~, ~)
 
   %% Target metrics
 
