@@ -1,4 +1,4 @@
-function batchFunction(varargin)
+function [varargout] = batchFunction(varargin)
 
   % options & defaults
   options = struct;
@@ -7,18 +7,28 @@ function batchFunction(varargin)
   options.simFcn = 'cost_fI';
   options.outfile = ['data-' options.simFcn '-' corelib.getComputerName() '.mat'];
   options.seeds = [];
+  options.model = [];
 
   options = orderfields(options);
 
   % validate and accept options
   options = corelib.parseNameValueArguments(options, varargin{:});
 
+  % if no options, output a struct of options
+  if nargout && ~nargin
+    varargout{1} = options;
+    return
+  end
+
   % select a xolotl model
-  model_howard
+  if ~isempty(options.model)
+    model_howard
+    options.model = x;
+  end
 
   % create an xfit object
   p           = xfit;
-  p.x         = x;
+  p.x         = options.model;
   p.options.UseParallel = true;
   p.SimFcn    = str2func(options.simFcn);
 
