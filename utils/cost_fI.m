@@ -38,7 +38,7 @@ function cost = cost_fI(x, ~, ~)
   current_steps = fI.I;
   firing_rate = fI.f_up;
 
-  if any(isnan(firing_rate) || isinf(firing_rate))
+  if any(isnan(firing_rate)) || any(isinf(firing_rate))
     cost = 1e12;
     return
   end
