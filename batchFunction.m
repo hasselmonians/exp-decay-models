@@ -21,7 +21,7 @@ function [varargout] = batchFunction(varargin)
   end
 
   % select a xolotl model
-  if ~isempty(options.model)
+  if isempty(options.model)
     model_howard
     options.model = x;
   end
