@@ -45,7 +45,7 @@ function cost = cost_fI(x, ~, ~)
 
   %% Fit a linear model to the fI curve
 
-  p = polyfit(rescale(current_steps), firing_rate);
+  p = polyfit(rescale(current_steps), firing_rate, 1);
   fit_firing_rate = polyval(p, rescale(current_steps));
 
   % compute the R-squared value
