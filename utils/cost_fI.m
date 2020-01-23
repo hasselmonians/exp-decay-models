@@ -64,7 +64,7 @@ function cost = cost_fI(x, ~, ~)
   cost(2) = cost(2) + xtools.binCost(target_norm_gain, p(1));
 
   % cost due to goodness-of-fit
-  cost(3) = cost(3) sqCost(target_rsq, rsq);
+  cost(3) = cost(3) + sqCost(target_rsq, rsq);
 
   %% Compute the total cost
 
