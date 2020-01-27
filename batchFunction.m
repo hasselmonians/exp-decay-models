@@ -1,5 +1,12 @@
 function [varargout] = batchFunction(varargin)
 
+  % setup paths
+  addpath(genpath('/projectnb/hasselmogrp/ahoyland/srinivas.gs_mtools'));
+  addpath(genpath('/projectnb/hasselmogrp/ahoyland/exp-decay-models'));
+  addpath(genpath('/projectnb/hasselmogrp/ahoyland/puppeteer'));
+  addpath(genpath('/projectnb/hasselmogrp/ahoyland/xolotl'));
+  addpath(genpath('/projectnb/hasselmogrp/ahoyland/cpplab'));
+
   % options & defaults
   options = struct;
   options.nSims = 100;
