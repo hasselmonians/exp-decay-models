@@ -33,7 +33,7 @@ with the following properties:
 2. They have a minimal number of conductances.
 3. They are biologically-plausible thalamocortical or hippocampal cells.
 4. Their F-I characteristic is continuous, monotonically-increasing,
-and has a sufficient dynamic range (e.g. is not flat).
+and has a sufficient dynamic range (i.e. is not flat).
 
 With regard to (1), (2), and (3),
 [Dextexhe *et al.* 1994](https://www.ncbi.nlm.nih.gov/pubmed/7527077),
