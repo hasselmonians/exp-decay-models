@@ -1,13 +1,5 @@
-model_howard
+%% DEPRECATED %%
 
-p           = xfit;
-p.x         = x;
-p.options.UseParallel = true;
-p.SimFcn    = @simDecay;
-
-% parameters
-param_names = [x.find('*gbar')];
-p.parameter_names = param_names;
 p.lb = zeros(1, length(p.parameter_names));
 p.ub = 2 * [x.get('*gbar')]';
 
